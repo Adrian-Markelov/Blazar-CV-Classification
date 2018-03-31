@@ -1,6 +1,3 @@
-
-
-
 BuildSF = function(fname, objno)
 {
   
