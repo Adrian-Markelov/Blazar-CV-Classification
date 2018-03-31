@@ -27,14 +27,22 @@ def plot_data(magnitude, date, save_path):
         plt.ylabel('Mag')
     plt.savefig(save_path)
 
+def merge_two_dicts(x, y):
+    z = x.copy()   # start with x's keys and values
+    z.update(y)    # modifies z with y's keys and values & returns None
+    return z
+
+def get_all_data():
+    data_blazar = read_csv('data/Blazar_LC.csv')
+    data_cv = read_csv('data/CV_LC.csv')
+    data = merge_two_dicts(data_blazar, data_cv)
+    return data
 
 if __name__ == '__main__':
-    data = read_csv('data/Blazar_LC.csv')
-    # print(len(mag))
-    # plot_data(mag, date, 'data/Blazar.png')
-
-    # (mag, date) = read_csv('data/CV_LC.csv')
-    # print(len(mag))
-    # plot_data(mag, date, 'data/CV.png')
+    data = get_all_data()
+    lengths = []
+    for index in data:
+        lengths.append(len(data[index]['Mag']))
+    print(sorted(lengths))
 
 
