@@ -126,12 +126,12 @@ if __name__ == '__main__':
         structures[i]['magdiff'] = y
         structures[i]['class'] = data[i]['class']
 
+    import pickle
     with open('SF_bin.pickle','wb') as F:
-        import pickle
         pickle.dump(structures, F)
 
-    with open('SF.pickle','w') as F:
-        pickle.dump(structures, F)
+    # with open('SF.pickle','w') as F:
+    #     pickle.dump(structures, F)
 
 
 
