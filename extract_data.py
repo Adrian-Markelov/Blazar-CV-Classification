@@ -11,15 +11,15 @@ def read_csv(data_source):
         current_id = dataframe[0]
         result_dict[current_id] = dict()
         for k in dataframe[1]:
-            result_dict[current_id][k] = dataframe[1][k]
+            result_dict[current_id][k] = np.array(dataframe[1][k])
     return result_dict
 
 def plot_data(magnitude, date, save_path):
     plt.figure(figsize=(35,40))
-    N = 36
-    for (i, k) in enumerate(list(magnitude.keys())[:N]):
-        date_v = date[k]
-        mag_v = magnitude[k]
+    N = 10
+    for i in range(len(magnitude)):
+        date_v = date[i]
+        mag_v = magnitude[i]
         date_v -= np.min(date_v)
         plt.subplot(6,6,i+1)
         plt.scatter(date_v, mag_v, 1)
@@ -27,22 +27,76 @@ def plot_data(magnitude, date, save_path):
         plt.ylabel('Mag')
     plt.savefig(save_path)
 
+
+def BuildSF(time, mag):
+  nr = len(mag)
+  allpairs = np.zeros((nr*(nr-1)//2, 2))
+
+  pos = 0
+  for i in range(nr):
+    for j in range(i+1, nr):
+      allpairs[pos,0] = time[i]-time[j]
+      allpairs[pos,1] = mag[i]-mag[j]
+      pos = pos + 1
+  
+  # Find the absolute time difference
+  timediff = np.abs(allpairs[:,0])
+  magdiff = np.log10(np.abs(allpairs[:,1]) + 1e-9)
+
+  bad_idx = np.nonzero(magdiff < -5)[0]
+  timediff = np.delete(timediff, bad_idx)
+  magdiff = np.delete(magdiff, bad_idx)
+
+  return(timediff,magdiff)
+
 def merge_two_dicts(x, y):
     z = x.copy()   # start with x's keys and values
     z.update(y)    # modifies z with y's keys and values & returns None
     return z
 
+# dictionary is in the form d[index][key]
 def get_all_data():
     data_blazar = read_csv('data/Blazar_LC.csv')
+    for index in data_blazar:
+        data_blazar[index]['class'] = 'Blazar'
+    print("We have %d Blazar points" % (len(data_blazar)))
+
     data_cv = read_csv('data/CV_LC.csv')
+    for index in data_cv:
+        data_cv[index]['class'] = 'CV'
+    print("We have %d CV points" % (len(data_cv)))
     data = merge_two_dicts(data_blazar, data_cv)
     return data
 
+# first column is julian date, the next N columns are generated data
+def generate_data(data, N):
+    new_data = np.zeros((len(data['Mag']), N+1))
+    for (idx, time) in enumerate(data['MJD']):
+        # import pdb; pdb.set_trace()
+        err = data['Magerr'][idx]
+        mag = data['Mag'][idx]
+        new_data[idx,0] = time
+        new_data[idx,1:] = np.random.normal(mag, err**0.5, N)
+    return new_data
+
+def plot_structure(x, y):
+    plt.figure(1)
+    plt.scatter(x, y, s=2)
+    plt.show()
+
 if __name__ == '__main__':
     data = get_all_data()
-    lengths = []
-    for index in data:
-        lengths.append(len(data[index]['Mag']))
-    print(sorted(lengths))
+    for i in data:
+        (x, y) = BuildSF(data[i]['MJD'], data[i]['Mag'])
+        plot_structure(x, y)
+
+
+
+
+
+
+
+
+
 
 
