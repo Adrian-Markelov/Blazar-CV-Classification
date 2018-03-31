@@ -117,18 +117,18 @@ if __name__ == '__main__':
 
     data = get_all_data()
 
-    # structures = dict()
-    # for i in data:
-    #     print(i)
-    #     (x, y) = BuildSF(data[i]['MJD'], data[i]['Mag'])
-    #     structures[i] = dict()
-    #     structures[i]['timediff'] = x
-    #     structures[i]['magdiff'] = y
-    #     structures[i]['class'] = data[i]['class']
+    structures = dict()
+    for i in data:
+        print(i)
+        (x, y) = BuildSF(data[i]['MJD'], data[i]['Mag'])
+        structures[i] = dict()
+        structures[i]['timediff'] = x
+        structures[i]['magdiff'] = y
+        # structures[i]['class'] = data[i]['class']
 
-    # import pickle
-    # with open('SF_bin.pickle','wb') as F:
-    #     pickle.dump(structures, F)
+    import pickle
+    with open('SF.pickle','wb') as F:
+        pickle.dump(structures, F)
 
     # with open('SF.pickle','w') as F:
     #     pickle.dump(structures, F)
