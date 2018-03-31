@@ -47,7 +47,7 @@ def BuildSF(time, mag):
   timediff = np.delete(timediff, bad_idx)
   magdiff = np.delete(magdiff, bad_idx)
 
-  return(timediff,magdiff)
+  return (timediff,magdiff)
 
 def merge_two_dicts(x, y):
     z = x.copy()   # start with x's keys and values
@@ -65,7 +65,17 @@ def get_all_data():
     for index in data_cv:
         data_cv[index]['class'] = 'CV'
     print("We have %d CV points" % (len(data_cv)))
-    data = merge_two_dicts(data_blazar, data_cv)
+
+    data = dict()
+    counter = 0
+    for i in data_blazar:
+        data[counter] = data_blazar[i]
+        counter += 1
+
+    for i in data_cv:
+        data[counter] = data_cv[i]
+        counter += 1
+
     return data
 
 # first column is julian date, the next N columns are generated data
@@ -84,12 +94,44 @@ def plot_structure(x, y):
     plt.scatter(x, y, s=2)
     plt.show()
 
-if __name__ == '__main__':
-    data = get_all_data()
-    for i in data:
-        (x, y) = BuildSF(data[i]['MJD'], data[i]['Mag'])
-        plot_structure(x, y)
+# given a structure function output, find the quantiles
+def find_quantiles(one_point):
+    NUM_QUANTILES = 10
 
+
+
+'''
+
+The structure functions are saved in SF.npy as a dictionary A s.t. 
+A[idx][0] is timediff, A[idx][1] is magdiff, 0 <= idx <= N 
+
+Extract with the following code:
+
+    # with open('SF.pickle','rb') as F:
+    #     import pickle
+    #     a = pickle.load(F)
+
+'''
+
+if __name__ == '__main__':
+
+    data = get_all_data()
+
+    structures = dict()
+    for i in data:
+        print(i)
+        (x, y) = BuildSF(data[i]['MJD'], data[i]['Mag'])
+        structures[i] = dict()
+        structures[i]['timediff'] = x
+        structures[i]['magdiff'] = y
+        structures[i]['class'] = data[i]['class']
+
+    with open('SF_bin.pickle','wb') as F:
+        import pickle
+        pickle.dump(structures, F)
+
+    with open('SF.pickle','w') as F:
+        pickle.dump(structures, F)
 
 
 
