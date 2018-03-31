@@ -124,7 +124,7 @@ if __name__ == '__main__':
         structures[i] = dict()
         structures[i]['timediff'] = x
         structures[i]['magdiff'] = y
-        # structures[i]['class'] = data[i]['class']
+        structures[i]['class'] = data[i]['class']
 
     import pickle
     with open('SF.pickle','wb') as F:
