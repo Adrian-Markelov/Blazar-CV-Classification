@@ -69,10 +69,12 @@ def get_all_data():
     data = dict()
     counter = 0
     for i in data_blazar:
+        if len(data_blazar[i]['Mag']) < 50: continue
         data[counter] = data_blazar[i]
         counter += 1
 
     for i in data_cv:
+        if len(data_cv[i]['Mag']) < 50: continue
         data[counter] = data_cv[i]
         counter += 1
 
