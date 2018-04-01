@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt 
+import pickle
 
 def read_csv(data_source):
     df = pd.read_csv(data_source)
@@ -59,12 +60,10 @@ def get_all_data():
     data_blazar = read_csv('data/Blazar_LC.csv')
     for index in data_blazar:
         data_blazar[index]['class'] = 'Blazar'
-    print("We have %d Blazar points" % (len(data_blazar)))
 
     data_cv = read_csv('data/CV_LC.csv')
     for index in data_cv:
         data_cv[index]['class'] = 'CV'
-    print("We have %d CV points" % (len(data_cv)))
 
     data = dict()
     counter = 0
@@ -72,11 +71,14 @@ def get_all_data():
         if len(data_blazar[i]['Mag']) < 50: continue
         data[counter] = data_blazar[i]
         counter += 1
+    print("We have %d Blazar points" % (len(data)))
+    num_blazar = len(data)
 
     for i in data_cv:
         if len(data_cv[i]['Mag']) < 50: continue
         data[counter] = data_cv[i]
         counter += 1
+    print("We have %d CV points" % (len(data) - num_blazar))
 
     return data
 
@@ -96,11 +98,20 @@ def plot_structure(x, y):
     plt.scatter(x, y, s=2)
     plt.show()
 
-# given a structure function output, find the quantiles
-def find_quantiles(one_point):
-    NUM_QUANTILES = 10
-
-
+# produces times * len(data) extra data points 
+def extend_data(data, times):
+    extra_data = dict() 
+    counter = 0
+    for i in data:
+        current_batch = generate_data(data[i], times)
+        # import pdb; pdb.set_trace()
+        for j in range(times):
+            extra_data[counter] = dict()
+            extra_data[counter]['MJD'] = current_batch[:,0]
+            extra_data[counter]['Mag'] = current_batch[:,j+1]
+            counter += 1
+            print(counter)
+    return extra_data
 
 '''
 
@@ -118,19 +129,22 @@ Extract with the following code:
 if __name__ == '__main__':
 
     data = get_all_data()
+    extra_data = extend_data(data, 100)
+    with open('data/extra_data.pickle','wb') as f:
+        pickle.dump(extra_data, f)
 
-    structures = dict()
-    for i in data:
-        print(i)
-        (x, y) = BuildSF(data[i]['MJD'], data[i]['Mag'])
-        structures[i] = dict()
-        structures[i]['timediff'] = x
-        structures[i]['magdiff'] = y
-        structures[i]['class'] = data[i]['class']
 
-    import pickle
-    with open('SF.pickle','wb') as F:
-        pickle.dump(structures, F)
+    # structures = dict()
+    # for i in data:
+    #     print(i)
+    #     (x, y) = BuildSF(data[i]['MJD'], data[i]['Mag'])
+    #     structures[i] = dict()
+    #     structures[i]['timediff'] = x
+    #     structures[i]['magdiff'] = y
+    #     structures[i]['class'] = data[i]['class']
+
+    # with open('SF.pickle','wb') as F:
+    #     pickle.dump(structures, F)
 
     # with open('SF.pickle','w') as F:
     #     pickle.dump(structures, F)
