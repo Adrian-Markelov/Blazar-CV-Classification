@@ -129,9 +129,14 @@ Extract with the following code:
 if __name__ == '__main__':
 
     data = get_all_data()
-    extra_data = extend_data(data, 100)
-    with open('data/extra_data.pickle','wb') as f:
-        pickle.dump(extra_data, f)
+    with open('data/SF.pickle','rb') as f:
+        a = pickle.load(f)
+    for i in a:
+        c = a[i]['timediff']
+        print('Max %f, Min %f, Max - Min: %f' % (c.max(), c.min(), c.max() - c.min()))
+    # extra_data = extend_data(data, 100)
+    # with open('data/extra_data.pickle','wb') as f:
+    #     pickle.dump(extra_data, f)
 
 
     # structures = dict()
