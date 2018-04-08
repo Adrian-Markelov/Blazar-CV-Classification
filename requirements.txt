@@ -1,0 +1,9 @@
+pandas
+matplotlib
+statsmodels
+plotly
+h5py
+tqdm
+tensorflow==1.4.0
+keras
+sklearn

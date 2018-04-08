@@ -2,3 +2,4 @@
 *.pickle
 data/*
 *./ipynb_checkpoints/*
+venv/*
