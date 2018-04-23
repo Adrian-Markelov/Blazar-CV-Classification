@@ -1,3 +1,21 @@
+# Plotting Libraries
+import plotly.offline as py
+py.init_notebook_mode(connected=True)
+import plotly.graph_objs as go
+import plotly.tools as tls
+import matplotlib.image as mpimg
+import matplotlib.pyplot as plt
+import matplotlib
+
+# ML and data libraries
+from sklearn.manifold import TSNE
+from sklearn.decomposition import PCA
+import numpy as np
+import scipy
+import pandas as pd 
+
+# System libraries
+import pickle 
 
 
 # X = (num_samples, num_features)
@@ -5,7 +23,6 @@ def get_explained_var(X):
 	# calculating Eigenvectors
 	# Standardize the data
 	from sklearn.preprocessing import StandardScaler
-	X = sf_image_vects
 	X_std = StandardScaler().fit_transform(X)
 
 	# Calculating Eigenvectors and eigenvalues of Cov matirx
@@ -68,45 +85,20 @@ def plot_explained_var(var_exp, cum_var_exp, num_features, feature_zoom):
 
 
 
-
-
-def plot_eigens(eigen_values, n_eigens):
-    #n_eigens = 4
-    # Plot the first 8 eignenvalues
-    plt.figure(figsize=(40,40))
+def plot_eigens(eigen_values, n_eigens, im_size):
+    import matplotlib.pyplot as plt
+    plt.figure(figsize=(im_size,im_size))
     for i in list(range(n_eigens)):
     #     for offset in [10, 30,0]:
     #     plt.subplot(n_row, n_col, i + 1)
         offset =0
         plt.subplot(n_eigens, 1, i + 1)
-        plt.imshow(eigenvalues[i].reshape(im_size,im_size), cmap='jet')
+        plt.imshow(eigen_values[i].reshape(im_size,im_size), cmap='jet')
         title_text = 'Eigenvalue ' + str(i + 1)
         plt.title(title_text, size=16)
         plt.xticks(())
         plt.yticks(())
     plt.show()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
