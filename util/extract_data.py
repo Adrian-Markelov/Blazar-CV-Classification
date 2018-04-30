@@ -56,26 +56,24 @@ def merge_two_dicts(x, y):
     return z
 
 # dictionary is in the form d[index][key]
-def get_all_data():
-    data_blazar = read_csv('data/Blazar_LC.csv')
+def get_all_data(blazarPath, CVPath):
+    data_blazar = read_csv(blazarPath)
     for index in data_blazar:
         data_blazar[index]['class'] = 'Blazar'
 
-    data_cv = read_csv('data/CV_LC.csv')
+    data_cv = read_csv(CVPath)
     for index in data_cv:
         data_cv[index]['class'] = 'CV'
 
     data = dict()
     counter = 0
     for i in data_blazar:
-        if len(data_blazar[i]['Mag']) < 50: continue
         data[counter] = data_blazar[i]
         counter += 1
     print("We have %d Blazar points" % (len(data)))
     num_blazar = len(data)
 
     for i in data_cv:
-        if len(data_cv[i]['Mag']) < 50: continue
         data[counter] = data_cv[i]
         counter += 1
     print("We have %d CV points" % (len(data) - num_blazar))
@@ -126,14 +124,7 @@ Extract with the following code:
 
 '''
 
-if __name__ == '__main__':
-
-    data = get_all_data()
-    with open('data/SF.pickle','rb') as f:
-        a = pickle.load(f)
-    for i in a:
-        c = a[i]['timediff']
-        print('Max %f, Min %f, Max - Min: %f' % (c.max(), c.min(), c.max() - c.min()))
+    
     # extra_data = extend_data(data, 100)
     # with open('data/extra_data.pickle','wb') as f:
     #     pickle.dump(extra_data, f)
