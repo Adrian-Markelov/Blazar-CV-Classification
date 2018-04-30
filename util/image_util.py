@@ -6,7 +6,6 @@ import plotly.tools as tls
 import matplotlib.image as mpimg
 import matplotlib.pyplot as plt
 import matplotlib
-%matplotlib inline
 
 # Machine Learning and Packages
 from sklearn.manifold import TSNE
@@ -18,13 +17,6 @@ import numpy as np
 
 # System Packages
 import pickle
-
-
-
-
-
-
-
 
 
 #0-217 blazar, 218-793 CV
@@ -73,8 +65,6 @@ def image_2_vect(image):
     return lin_image
 
 
-
-
 def save_raw_images(file, sf, im_size):
     n = len(sf)
     data_images = {}
@@ -87,6 +77,7 @@ def save_raw_images(file, sf, im_size):
     
     with open(file, 'wb') as handle:
         pickle.dump(data_images, handle, protocol=pickle.HIGHEST_PROTOCOL)
+    return data_images
     
 def get_raw_images(file):
     return pickle.load(open(file, "rb"))
@@ -101,7 +92,7 @@ def save_raw_image_vects(file, sf_images):
     n = len(sf_images)
     im_size = sf_images[0]['image'].shape[0]
     data_image_vects = np.zeros((n,im_size**2))
-    data_image_vects_classes = np.zeros((n,im_size**2))
+    data_image_vects_classes = np.zeros((n,))
     for obj_idx in range(0,n):
         image = sf_images[obj_idx]['image']
         c = sf_images[obj_idx]['class']
@@ -114,21 +105,13 @@ def save_raw_image_vects(file, sf_images):
     with open(file, 'wb') as handle:
         pickle.dump(data, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
+    return data
+
 
 def get_raw_image_vects(file):
     return pickle.load(open(file,"rb"))
     
     
-
-
-
-
-
-
-
-
-
-
 
 
 
